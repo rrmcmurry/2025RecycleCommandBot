@@ -80,7 +80,8 @@ public class ElevatorSubsystem extends SubsystemBase{
         return -ElevatorConstants.kElevatorSpeed * Math.min(100, currentposition)/100; 
     }
 
-    public void robotPeriodic() {
+    @Override
+    public void periodic() {
         currentposition = encoder.getPosition();        
         // Speed limiter used to limit swerve drive speed based on elevator height to prevent tipping with a higher center of gravity
         elevatorspeedlimiter = (ElevatorConstants.kHighestLevel + 70 - currentposition) / (ElevatorConstants.kHighestLevel + 70); 
