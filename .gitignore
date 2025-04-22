@@ -1,0 +1,9 @@
+build/
+gradle/
+.gradle/
+.vscode/
+.wpilib/
+bin/
+/bin
+*.class
+/bin/main/frc/robot/subsystems
