@@ -115,6 +115,14 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.zeroYaw();
     }
 
+    public float getHeading() {// Assuming this returns yaw in degrees
+        return m_gyro.getYaw();
+    }
+
+    public void stop(){
+        this.drive(0,0,0,true);
+    }
+
     public Command driveCommand(XboxController controller, boolean fieldRelative){
         return Commands.run(
             () -> {

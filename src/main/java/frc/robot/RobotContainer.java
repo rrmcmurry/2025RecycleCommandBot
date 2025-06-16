@@ -11,6 +11,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.ZombieMarch;
 
 public class RobotContainer {
   public final DriveSubsystem drive = new DriveSubsystem();
@@ -26,6 +27,7 @@ public class RobotContainer {
   private void configureBindings() {
     new Trigger(() -> controller.getRightBumperButton()).whileTrue(elevator.raiseCommand());
     new Trigger(() -> controller.getLeftBumperButton()).whileTrue(elevator.lowerCommand());
+    new Trigger(() -> controller.getAButton()).onTrue(new ZombieMarch(drive));
   }
   
   public Command getAutonomousCommand() {
