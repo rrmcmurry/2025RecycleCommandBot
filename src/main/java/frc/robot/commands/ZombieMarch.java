@@ -7,65 +7,73 @@ import frc.robot.subsystems.DriveSubsystem;
 public class ZombieMarch extends Command {
     private final DriveSubsystem drive;
     private Timer timer = new Timer();
-    private float startAngle;
-    private int phase = 0;
+    boolean done;
 
     public ZombieMarch(DriveSubsystem drive) {
         this.drive = drive;
         addRequirements(drive);
-        startAngle = 0;
     }
 
     @Override
     public void initialize() {
         timer.reset();
-        timer.start();
-        startAngle = drive.getHeading(); // Assuming this returns yaw in degrees
-        phase = 0;
+        timer.start();        
+        done = false;
     }
 
     @Override
     public void execute() {
         double time = timer.get();
+        
+        if (time < 41.586) stop();
+        // forward
+        else if (time < 42.636) marchright();
+        else if (time < 43.564) marchleft();
+        else if (time < 44.664) marchright();
+        else if (time < 45.616) marchleft();
+        // take it back
+        else if (time < 46.692) backright();
+        else if (time < 47.658) backleft();
+        else if (time < 48.724) backright();
+        else if (time < 49.739) backleft();
+        // to the front
+        else if (time < 50.743) marchright();
+        else if (time < 51.766) marchleft();
+        else if (time < 52.781) marchright();
+        else if (time < 53.721) marchleft();
+        // take it back
+        else if (time < 54.810) backright();
+        else if (time < 55.740) backleft();
+        else if (time < 56.838) backright();
+        else if (time < 57.770) backleft();
+        
+        else done=true;
+    }
 
-        switch (phase) {
-            case 0:
-                // Forward while turning left
-                drive.drive(0.2, 0.0, 0.1, true);
-                if (time > 1.5) phase++;
-                break;
-            case 1:
-                // Rotate back to original heading
-                double currentHeading = drive.getHeading();
-                double error = startAngle - currentHeading;
-                double kP = 0.01;
-                drive.drive(0.0, 0.0, error * kP, true);
-                if (Math.abs(error) < 2) phase++;
-                break;
-            case 2:
-                // Do it again
-                timer.reset();
-                phase++;
-                break;
-            case 3:
-                drive.drive(0.2, 0.0, 0.1, true);
-                if (timer.get() > 1.5) phase++;
-                break;
-            case 4:
-                // Rotate back again
-                double heading = drive.getHeading();
-                double err = startAngle - heading;
-                drive.drive(0.0, 0.0, err * 0.01, true);
-                if (Math.abs(err) < 2) phase++;
-                break;
-            default:
-                drive.stop();
-        }
+
+    private void stop() {
+        drive.drive(0,0,0,false);
+    }
+
+    private void marchright() {
+        drive.drive(0.05, 0.0, 0.05, false);
+    }
+
+    private void marchleft() {
+        drive.drive(0.0, 0.0, -0.05, false);
+    }
+
+    private void backright() {
+        drive.drive(-0.05, 0.0, -0.05, false);
+    }
+
+    private void backleft() {
+        drive.drive(0.0, 0.0, 0.05, false);
     }
 
     @Override
     public boolean isFinished() {
-        return phase > 4;
+        return done;
     }
 
     @Override
@@ -73,3 +81,4 @@ public class ZombieMarch extends Command {
         drive.stop();
     }
 }
+
